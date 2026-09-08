@@ -66,7 +66,10 @@
       <Filter>Scene\[00]TestScene</Filter>
     </ClCompile>
     <ClCompile Include="Source\PlayScene.cpp">
-      <Filter>Scene\[01]NewGame</Filter>
+      <Filter>Scene\[01]PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\VRMModel.cpp">
+      <Filter>Library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,7 +152,10 @@
       <Filter>Scene\[00]TestScene</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlayScene.h">
-      <Filter>Scene\[01]NewGame</Filter>
+      <Filter>Scene\[01]PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\VRMModel.h">
+      <Filter>Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,7 +174,7 @@
     <Filter Include="Scene\[00]TestScene">
       <UniqueIdentifier>{5e48e982-377e-4c3a-95ef-83de5365b706}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\[01]NewGame">
+    <Filter Include="Scene\[01]PlayScene">
       <UniqueIdentifier>{dc042342-c3e3-44b1-b0f1-af9ad66f023d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
