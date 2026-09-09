@@ -15,40 +15,75 @@ PlayScene::PlayScene()
 	: bgImage(-1)
 	, currentSelect(0)
 	, playerModel()
+	, cameraPosition(
+		VGet(
+			0.0f,
+			1.0f,
+			-4.0f))
+	, cameraTarget(
+		VGet(
+			0.0f,
+			1.0f,
+			0.0f))
+	, cameraUp(
+		VGet(
+			0.0f,
+			1.0f,
+			0.0f))
+	, playerPosition(
+		VGet(
+			0.0f,
+			0.0f,
+			0.0f))
+	, playerScale(1.0f)
+	, playerRotationY(0.0f)
 
 {
-	
+	//==================================================
 	//背景画像のロード
-	bgImage = LoadGraph(
-		"data/BG_Ti_01.png");
+	//==================================================
+	bgImage =
+		LoadGraph(
+			"data/BG_Ti_01.png");
 
 
-	
+	//==================================================
 	//ボタンの配置情報設定
-	int bx = 50;	//ボタンのX座標
-	int by = 200;	//Y座標
-	int bw = 400;	//ボタンの幅
-	int bh = 90;	//ボタンの高さ
-	int bi = 100;	//ボタン間隔
+	//==================================================
+	int bx = 50;
+
+	int by = 200;
+
+	int bw = 400;
+
+	int bh = 90;
+
+	int bi = 100;
 
 
-	
+	//==================================================
 	//ボタン画像のロード
+	//==================================================
 	int btnImg_bPl00 =
-		LoadGraph("data/UI_Pl_00.png");
+		LoadGraph(
+			"data/UI_Pl_00.png");
 
 	int btnImg_bPl01 =
-		LoadGraph("data/UI_Pl_01.png");
+		LoadGraph(
+			"data/UI_Pl_01.png");
 
 	int btnImg_bPl02 =
-		LoadGraph("data/UI_Pl_02.png");
+		LoadGraph(
+			"data/UI_Pl_02.png");
 
 	int btnImg_bPl03 =
-		LoadGraph("data/UI_Pl_03.png");
+		LoadGraph(
+			"data/UI_Pl_03.png");
 
 
-	
-	//ボタン0の生成
+	//==================================================
+	//ボタン0
+	//==================================================
 	auto bPl00 =
 		new GuiButton(
 			0,
@@ -57,15 +92,23 @@ PlayScene::PlayScene()
 			100,
 			"Back");
 
-	bPl00->SetImage(btnImg_bPl00);
+	bPl00->SetImage(
+		btnImg_bPl00);
 
-	bPl00->onClick =[](){SceneManager::ChangeScene("RETURN");};
+	bPl00->onClick =
+		[]()
+		{
+			SceneManager::ChangeScene(
+				"RETURN");
+		};
 
-	buttons.push_back(bPl00);
+	buttons.push_back(
+		bPl00);
 
 
-	
-	//ボタン1の生成
+	//==================================================
+	//ボタン1
+	//==================================================
 	auto bPl01 =
 		new GuiButton(
 			bx,
@@ -74,15 +117,19 @@ PlayScene::PlayScene()
 			bh,
 			"01");
 
-	bPl01->SetImage(btnImg_bPl01);
+	bPl01->SetImage(
+		btnImg_bPl01);
 
-	bPl01->onClick =[](){};
+	bPl01->onClick =
+		[]() {};
 
-	buttons.push_back(bPl01);
+	buttons.push_back(
+		bPl01);
 
 
-	
-	//ボタン2の生成
+	//==================================================
+	//ボタン2
+	//==================================================
 	auto bPl02 =
 		new GuiButton(
 			bx,
@@ -91,15 +138,19 @@ PlayScene::PlayScene()
 			bh,
 			"02");
 
-	bPl02->SetImage(btnImg_bPl02);
+	bPl02->SetImage(
+		btnImg_bPl02);
 
-	bPl02->onClick =[](){};
+	bPl02->onClick =
+		[]() {};
 
-	buttons.push_back(bPl02);
+	buttons.push_back(
+		bPl02);
 
 
-	
-	//ボタン3の生成
+	//==================================================
+	//ボタン3
+	//==================================================
 	auto bPl03 =
 		new GuiButton(
 			bx,
@@ -108,29 +159,22 @@ PlayScene::PlayScene()
 			bh,
 			"03");
 
-	bPl03->SetImage(btnImg_bPl03);
+	bPl03->SetImage(
+		btnImg_bPl03);
 
-	bPl03->onClick =[](){};
+	bPl03->onClick =
+		[]() {};
 
-	buttons.push_back(bPl03);
+	buttons.push_back(
+		bPl03);
 
 
 	//==================================================
 	//VRM読み込み
 	//==================================================
-	//
-	//Data/VRM/Player.vrm
-	//
-	//にVRMファイルを配置してください。
-	//
-	//==================================================
-
 	if (!playerModel.Load(
 		"data/VRM/Player.vrm"))
 	{
-		
-		//読み込み失敗
-		
 		printfDx(
 			"[VRM] Load Failed\n");
 
@@ -140,9 +184,6 @@ PlayScene::PlayScene()
 	}
 	else
 	{
-		
-		//読み込み成功
-		
 		printfDx(
 			"[VRM] Load Success\n");
 
@@ -170,10 +211,8 @@ PlayScene::PlayScene()
 				playerModel.GetHumanoidBoneCount()));
 
 
-		
-		//VRMバージョン
-		
-		switch (playerModel.GetVersion())
+		switch (
+			playerModel.GetVersion())
 		{
 		case VRMModel::Version::VRM_0_X:
 
@@ -199,6 +238,34 @@ PlayScene::PlayScene()
 			break;
 		}
 	}
+
+
+	//==================================================
+	//3Dカメラ設定
+	//==================================================
+	SetCameraNearFar(
+		0.01f,
+		100.0f);
+
+	SetupCamera_Perspective(
+		60.0f *
+		DX_PI_F /
+		180.0f);
+
+	SetCameraPositionAndTargetAndUpVec(
+		cameraPosition,
+		cameraTarget,
+		cameraUp);
+
+
+	//==================================================
+	//ライティング
+	//
+	//現段階ではVRMのPBRマテリアルを
+	//まだ実装していないためOFFにする。
+	//==================================================
+	SetUseLighting(
+		FALSE);
 }
 
 
@@ -207,21 +274,15 @@ PlayScene::PlayScene()
 //==================================================
 PlayScene::~PlayScene()
 {
-	
 	//背景画像の削除
-	
-	DeleteGraph(bgImage);
+	DeleteGraph(
+		bgImage);
 
+	//ボタンの解放は
+	//GuiButton自身の管理に任せる
 
-	
-	//ボタンの解放はGuiButton自身のデストラクタで行われる
-	
-
-
-	
 	//VRMModelは自身のデストラクタで
 	//VRMデータを解放する
-	
 }
 
 
@@ -230,9 +291,9 @@ PlayScene::~PlayScene()
 //==================================================
 void PlayScene::Update()
 {
-	
+	//==================================================
 	//ESCキー
-	
+	//==================================================
 	if (Input::IsKeyDown(
 		KEY_INPUT_ESCAPE))
 	{
@@ -243,9 +304,9 @@ void PlayScene::Update()
 	}
 
 
-	
+	//==================================================
 	//上下キー選択
-	
+	//==================================================
 	if (Input::IsKeyDown(
 		KEY_INPUT_DOWN))
 	{
@@ -260,11 +321,6 @@ void PlayScene::Update()
 		currentSelect =
 			(currentSelect - 1 + 2) % 2;
 	}
-
-
-	
-	//現段階ではVRMの更新処理なし
-	
 }
 
 
@@ -273,9 +329,9 @@ void PlayScene::Update()
 //==================================================
 void PlayScene::Draw()
 {
-	
-	//背景の描画
-	
+	//==================================================
+	//2D背景
+	//==================================================
 	if (bgImage != -1)
 	{
 		DrawExtendGraph(
@@ -288,24 +344,32 @@ void PlayScene::Draw()
 	}
 
 
-	
-	//ボタンの描画
-	
+	//==================================================
+	//3Dカメラ
+	//==================================================
+	SetCameraPositionAndTargetAndUpVec(
+		cameraPosition,
+		cameraTarget,
+		cameraUp);
+
+
+	//==================================================
+	//VRM描画
+	//==================================================
+	if (playerModel.IsLoaded())
+	{
+		playerModel.Draw(
+			playerScale,
+			playerPosition,
+			playerRotationY);
+	}
+
+
+	//==================================================
+	//2D UI
+	//==================================================
 	for (auto b : buttons)
 	{
 		b->Draw();
 	}
-
-
-	
-	//VRM
-	//
-	//現段階ではまだ描画しない。
-	//
-	//次の段階でここに
-	//
-	//playerModel.Draw();
-	//
-	//を実装する。
-	
 }
